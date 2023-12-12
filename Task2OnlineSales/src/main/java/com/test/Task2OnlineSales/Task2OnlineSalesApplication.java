@@ -13,27 +13,26 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Task2OnlineSalesApplication {
 
 	private static final String API_BASE_URL = "https://api.mathjs.org/v4/"; // Base URL for the math expression
-																				// evaluation API
+										 // evaluation API
 
 	public static void main(String[] args) throws IOException { // Main method to take user input and display results
 		SpringApplication.run(Task2OnlineSalesApplication.class, args);
 
-		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); // Create a buffered reader to
-																						// read user input from the
-																						// console
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); // Create a buffered reader to read user input from the
+						         				      // console
 
 		try {
 			String expression;
 			while (true) {
 				System.out.print("Enter expression (type 'end' to finish): "); // Continue taking expressions until the
-																				// user enters 'end'
+											       // user enters 'end'
 				expression = reader.readLine();
 				if (expression.equals("end")) {
 					break;
 				}
 
 				String result = evaluateExpression(expression); // Evaluate the expression using the API and display the
-																// result
+									        // result
 				System.out.println(expression + " => " + result);
 			}
 		} catch (Exception e) { // Handle exceptions that may occur during input or evaluation
@@ -43,7 +42,7 @@ public class Task2OnlineSalesApplication {
 	}
 
 	public static String evaluateExpression(String expression) { // Method to evaluate a mathematical expression using
-																	// the API
+								     // the API
 		try {
 			URL url = new URL(API_BASE_URL + "?expr=" + expression); // Construct the URL for the API request
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection(); // Open a connection to the API
