@@ -17,11 +17,11 @@ public class BiasedEventSimulation {
 			int cumulativeProbability = 0; // Variable to keep track of cumulative probability
 
 			for (int j = 0; j < outcomes.size(); j++) { // Loop through each outcome and check if the random number
-														// falls within its probability range
+								    // falls within its probability range
 				cumulativeProbability += outcomes.get(j).getValue();
 
 				if (randomNumber <= cumulativeProbability) { // If the random number is less than or equal to the
-																// cumulative probability, choose this outcome
+									     // cumulative probability, choose this outcome
 					occurrences[j]++;
 					break;
 				}
