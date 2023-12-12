@@ -1,0 +1,121 @@
+Task 2: Evaluate multiple mathematical expressions at once using a Web API
+
+Problem Statement: Write a program that accepts multiple mathematical expressions in bulk and evaluates each of them using any public Web API available. The program should display the result 		   of each expression on the console. Let’s assume that the API only supports 50 requests per second per client whereas your application is expected to evaluate at least 500      		   expressions per second. Also, the user may initiate more concurrent requests than your application can handle. Suggest an approach to handle this along with the reasoning 		   and implementation of the same.
+
+Rules:	No expressions should be evaluated in the code. All evaluations should be using the Web API.
+	You can assume different expressions/operators that are compatible with the API you choose. 
+	Example: Some API might use ^ operator for power some might use pow()
+Example
+	Input (every line is an expression, evaluate when “end” is provided as an expression)
+	2 * 4 * 4
+	5 / (7 - 5)
+	sqrt(5^2 - 4^2)
+	sqrt(-3^2 - 4^2)
+	end
+	Output
+	2 * 4 * 4 => 32
+	5 / (7 - 5) => 2.5
+	sqrt(5^2 - 4^2) => 3
+	sqrt(-3^2 - 4^2) = 5i
+
+_____________________________________________________________________________________________________________________________________________________________________________________________
+
+code: => 1. Just open chrome or any browser and type - start.spring.io
+	 2. Then from project just select maven and from right side click on add dependencies and write spring web  so that this dependency is added.
+	 3. Then at the bootom there is a button Generate click on it. It will download the zip file.
+	 4. Extract the zip file at perticular location. Now open eclipse click on files then open project from file system select the extracted folder.
+		Note: I have used spring framework just for 1 thing so that I can write the unit test case in test class.
+
+	Now inside src/main/java copy this code I am writing here.
+
+below is the code: =>
+	
+package com.test.Task2OnlineSales;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+@SpringBootApplication
+public class Task2OnlineSalesApplication {
+
+	private static final String API_BASE_URL = "https://api.mathjs.org/v4/"; // Base URL for the math expression evaluation API
+
+	public static void main(String[] args) throws IOException { // Main method to take user input and display results
+		SpringApplication.run(Task2OnlineSalesApplication.class, args);
+
+		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); // Create a buffered reader to read user input from the console
+
+		try {
+			String expression;
+			while (true) {
+				System.out.print("Enter expression (type 'end' to finish): "); // Continue taking expressions until the user enters 'end'
+																				
+				expression = reader.readLine();
+				if (expression.equals("end")) {
+					break;
+				}
+
+				String result = evaluateExpression(expression); // Evaluate the expression using the API and display the result
+				System.out.println(expression + " => " + result);
+			}
+		} catch (Exception e) { // Handle exceptions that may occur during input or evaluation
+			e.printStackTrace();
+			
+		}
+	}
+
+	public static String evaluateExpression(String expression) { // Method to evaluate a mathematical expression using the API
+		try {
+			URL url = new URL(API_BASE_URL + "?expr=" + expression); // Construct the URL for the API request
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection(); // Open a connection to the API
+			connection.setRequestMethod("GET");
+
+			BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream())); // Read the response from the API
+			String line;
+			StringBuilder response = new StringBuilder();
+
+			while ((line = reader.readLine()) != null) {
+				response.append(line);
+			}
+			reader.close();
+
+			connection.disconnect(); // Disconnect the connection after reading the response
+			return response.toString();
+		} catch (Exception e) {
+			e.printStackTrace(); // Handle exceptions, such as network errors or API issues
+			return "Error evaluating expression";
+		}
+	}
+}
+	* Before runing just use crtl + shift + f for correcting the format. 
+
+	Now inside src/test/java copy this code I am writing here. This is for testing ( unit test case )
+
+below is the code: =>
+	 
+package com.test.Task2OnlineSales;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.context.SpringBootTest;
+
+@SpringBootTest
+class Task2OnlineSalesApplicationTests {
+
+	 @Test // Test the evaluateExpression method for different mathematical expressions
+	    void testEvaluateExpression() { // Tested all the expression given in the question
+		 
+	        assertEquals("32", Task2OnlineSalesApplication.evaluateExpression("2 * 4 * 4"));
+	        assertEquals("2.5", Task2OnlineSalesApplication.evaluateExpression("5 / (7 - 5)"));
+	        assertEquals("3", Task2OnlineSalesApplication.evaluateExpression("sqrt(5^2 - 4^2)"));
+	        assertEquals("5", Task2OnlineSalesApplication.evaluateExpression("sqrt(-3^2 - 4^2)"));
+	    }
+}
+
+______________________________________________________________Task 2 completed_____________________________________________________________________________________________________________

@@ -1,0 +1,82 @@
+
+Task 1: Simulation of an Event that Follows Given Biasness
+
+Problem Statement:Write a program that accepts a map of all possible outcomes of an event along with their probabilities and every occurrence of the event would generate outcomes 			based on the given probabilities. This could be seen as a generalization of events like rolling of a dice (could be biased) or flipping of a coin (could be biased). 
+Examples
+		1.Rolling of a six-faced biased dice
+		a.Input: [ {1, 10}, {2, 30}, {3, 15}, {4, 15}, {5, 30}, {6, 0} ]
+		2.Flipping of a coin
+		a.Input [ {“Head”: 35}, {“Tail”: 65} ]
+Rules
+		1.Input: Probabilities given are as integers and percentages.
+		1.Each occurrence of the event should only generate one of the outcomes given in input
+		2.The outcome of each occurrence is independent of that of others.
+		3.On observing a large number (say 1000) of occurrences, the probability distribution should roughly follow the given biasness.
+Example
+		•Input: [ {1: 35}, {2: 65} ]  ## 1=Head, 2=Tail
+		•Output:
+		•On triggering the event 1000 times, Head appeared 332 times and Tail 668 times which is roughly inline with the biasness given.
+		•This is just one of the possibilities.
+__________________________________________________________________________________________________________________________________________________________________________________________
+
+Code: => Just Make a java project in eclipse and inside src/main/java create a class BaisedEventSimulation and past the below code. It will run without any errors.
+
+package main.java;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+public class BiasedEventSimulation {
+
+	public static String simulateEvent(List<Map.Entry<Integer, Integer>> outcomes, int numberOfOccurrences) {
+		// Method to simulate an event based on the given biased outcomes
+
+		int[] occurrences = new int[outcomes.size()]; // Array to store the occurrences of each outcome
+		Random random = new Random(); // Random number generator for simulating events
+
+		for (int i = 0; i < numberOfOccurrences; i++) { // Loop through the specified number of occurrence
+
+			int randomNumber = random.nextInt(100) + 1;
+			int cumulativeProbability = 0; // Variable to keep track of cumulative probability
+
+			for (int j = 0; j < outcomes.size(); j++) { // Loop through each outcome and check if the random number
+														// falls within its probability range
+				cumulativeProbability += outcomes.get(j).getValue();
+
+				if (randomNumber <= cumulativeProbability) { // If the random number is less than or equal to the
+																// cumulative probability, choose this outcome
+					occurrences[j]++;
+					break;
+				}
+			}
+		}
+
+		StringBuilder result = new StringBuilder(); // Build a string summarizing the results
+		for (int i = 0; i < outcomes.size(); i++) {
+			result.append("Outcome ").append(outcomes.get(i).getKey()).append(" appeared ").append(occurrences[i])
+					.append(" times, ");
+		}
+
+		return result.toString();
+	}
+
+	// Sample unit test cases using JUnit
+
+	public static void main(String[] args) {
+
+		// Test Case 1: Simulating a biased six-faced dice
+		List<Map.Entry<Integer, Integer>> biasedDice = List.of(Map.entry(1, 10), Map.entry(2, 30), Map.entry(3, 15),
+				Map.entry(4, 15), Map.entry(5, 30), Map.entry(6, 0));
+		System.out.println("Test Case 1: " + simulateEvent(biasedDice, 1000));
+
+		// Test Case 2: Simulating a biased coin flip
+		List<Map.Entry<Integer, Integer>> biasedCoin = List.of(Map.entry(1, 35), // Head
+				Map.entry(2, 65) // Tail
+		);
+		System.out.println("Test Case 2: " + simulateEvent(biasedCoin, 1000));
+	}
+}
+
+__________________________________________________________________________Completed the Task 1_____________________________________________________________________________________________
+
